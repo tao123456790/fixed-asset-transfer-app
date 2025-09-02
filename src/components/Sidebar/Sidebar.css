@@ -1,0 +1,58 @@
+/* Modern Sidebar Styles */
+.sidebar-container {
+  background-color: #333 !important;
+  color: white !important;
+  height: 100vh !important;
+}
+
+/* Tooltip Styling */
+.MuiTooltip-tooltip {
+  background: linear-gradient(135deg, #2c3e50, #34495e) !important;
+  color: white !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.MuiTooltip-arrow {
+  color: #2c3e50 !important;
+}
+
+.MuiTooltip-arrow::before {
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: linear-gradient(135deg, #2c3e50, #34495e) !important;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .sidebar-container {
+    width: 280px !important;
+  }
+}
+
+/* Smooth transitions */
+.MuiDrawer-paper {
+  transition: width 0.3s ease !important;
+}
+
+/* Custom scrollbar for sidebar */
+.sidebar-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-container::-webkit-scrollbar-track {
+  background: #444;
+}
+
+.sidebar-container::-webkit-scrollbar-thumb {
+  background: #666;
+  border-radius: 3px;
+}
+
+.sidebar-container::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
