@@ -5,17 +5,55 @@ import {
   Box,
   Typography,
   Button,
+  Tabs,
+  Tab,
+  Paper,
 } from '@mui/material';
-import { ArrowBack } from '@mui/icons-material';
-import Header from './Header';
-import AppSidebar from './Sidebar';
-import AssetTransferReportMUI, { AssetRow } from './AssetTransferReportMUI';
+import { ArrowBack, Description, AttachFile } from '@mui/icons-material';
+import Header from './Layout/Header/Header';
+import AppSidebar from './Layout/Sidebar/Sidebar';
+import AssetTransferReport, { AssetRow } from './AssetTransferReport';
+import AttachmentsPage from './AttachmentsPage';
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ py: 3 }}>
+          {children}
+        </Box>
+      )}
+    </div>
+  );
+}
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
 
 const DetailListPage: React.FC = () => {
   const [assetData, setAssetData] = useState<AssetRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [tabValue, setTabValue] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
   const transferFormData = location.state;
@@ -150,6 +188,10 @@ const DetailListPage: React.FC = () => {
     navigate('/dashboard');
   };
 
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setTabValue(newValue);
+  };
+
   if (loading) {
     return (
       <Box sx={{ display: 'flex', minHeight: '100vh' }}>
@@ -222,15 +264,42 @@ const DetailListPage: React.FC = () => {
             </Button> 
           </Box>
 
-          <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>
-            จำนวนรายการทั้งหมด: {assetData.length} รายการ
-          </Typography>
+          <Paper sx={{ width: '100%', mb: 2 }}>
+            <Tabs 
+              value={tabValue} 
+              onChange={handleTabChange} 
+              aria-label="detail tabs"
+              sx={{ borderBottom: 1, borderColor: 'divider' }}
+            >
+              <Tab 
+                label="Asset Transfer Report" 
+                icon={<Description />} 
+                iconPosition="start"
+                {...a11yProps(0)} 
+              />
+              <Tab 
+                label="Attachments" 
+                icon={<AttachFile />} 
+                iconPosition="start"
+                {...a11yProps(1)} 
+              />
+            </Tabs>
+          </Paper>
 
-          <AssetTransferReportMUI 
-            title="Asset Transfer Report"
-            rows={assetData}
-            transferFormData={transferFormData}
-          />
+          <TabPanel value={tabValue} index={0}>
+            <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>
+              จำนวนรายการทั้งหมด: {assetData.length} รายการ
+            </Typography>
+            <AssetTransferReport 
+              title="Asset Transfer Report"
+              rows={assetData}
+              transferFormData={transferFormData}
+            />
+          </TabPanel>
+          
+          <TabPanel value={tabValue} index={1}>
+            <AttachmentsPage transferFormData={transferFormData} />
+          </TabPanel>
         </Box>
       </Box>
     </Box>

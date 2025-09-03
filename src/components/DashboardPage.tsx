@@ -18,9 +18,17 @@ import {
   Chip,
   IconButton
 } from '@mui/material';
-import { ViewList, Search } from '@mui/icons-material';
-import Header from './Header';
-import AppSidebar from './Sidebar';
+import { ViewList, Search, Edit } from '@mui/icons-material';
+import Header from './Layout/Header/Header';
+import AppSidebar from './Layout/Sidebar/Sidebar';
+
+interface HistoryLogEntry {
+  id: string;
+  status: string;
+  timestamp: string;
+  user: string;
+  comment?: string;
+}
 
 interface DashboardData {
   owner: string;
@@ -31,6 +39,7 @@ interface DashboardData {
   locationTo: string;
   status: string;
   requester: string;
+  historyLog?: HistoryLogEntry[];
 }
 
 const DashboardPage: React.FC = () => {
@@ -60,10 +69,27 @@ const DashboardPage: React.FC = () => {
   }, [navigate]);
 
   const loadDashboardData = async () => {
+    // First check if there's updated data in localStorage
+    const storedData = localStorage.getItem('dashboardData');
+    if (storedData) {
+      try {
+        const parsedData = JSON.parse(storedData);
+        setDashboardData(parsedData);
+        return;
+      } catch (error) {
+        console.error('Error parsing stored data:', error);
+        localStorage.removeItem('dashboardData');
+      }
+    }
+
+    // If no localStorage data, load from JSON file or use mock data
     try {
       // Load data from local JSON file using axios
       const response = await axios.get('/data/dashboard.json');
-      setDashboardData(response.data.dashboardData);
+      const data = response.data.dashboardData;
+      setDashboardData(data);
+      // Store in localStorage for future updates
+      localStorage.setItem('dashboardData', JSON.stringify(data));
     } catch (error) {
       console.error('Error loading dashboard data:', error);
       
@@ -86,7 +112,7 @@ const DashboardPage: React.FC = () => {
           projectName: "Furniture Relocation",
           locationFrom: "Warehouse 1",
           locationTo: "Office Floor 5",
-          status: "Reject",
+          status: "Transfer Report Mismatch",
           requester: "Chanpen Manu"
         },
         {
@@ -96,33 +122,89 @@ const DashboardPage: React.FC = () => {
           projectName: "Server Room Equipment",
           locationFrom: "Data Center",
           locationTo: "Backup Site",
-          status: "Approved",
+          status: "Completed",
           requester: "Somchai Jaidee"
+        },
+        {
+          owner: "HR",
+          transferFormId: "TF-2024-0004",
+          requestDate: "12/01/2024",
+          projectName: "Training Room Setup",
+          locationFrom: "Building C - Floor 2",
+          locationTo: "Training Center",
+          status: "Transfer Report Mismatch(Re-Process)",
+          requester: "Suchada Kaewpong"
+        },
+        {
+          owner: "IT",
+          transferFormId: "TF-2024-0005",
+          requestDate: "11/01/2024",
+          projectName: "Network Equipment Migration",
+          locationFrom: "Server Room A",
+          locationTo: "Server Room B",
+          status: "Reject",
+          requester: "Prasit Wongsawat"
+        },
+        {
+          owner: "FM",
+          transferFormId: "TF-2024-0006",
+          requestDate: "10/01/2024",
+          projectName: "Office Renovation Assets",
+          locationFrom: "Floor 7",
+          locationTo: "Temporary Storage",
+          status: "Pending Review",
+          requester: "Nattapong Srisuk"
+        },
+        {
+          owner: "ACC",
+          transferFormId: "TF-2024-0007",
+          requestDate: "09/01/2024",
+          projectName: "Finance Office Equipment",
+          locationFrom: "Accounting Dept",
+          locationTo: "Finance Dept",
+          status: "Completed",
+          requester: "Wipada Tangthai"
+        },
+        {
+          owner: "IT",
+          transferFormId: "TF-2024-0008",
+          requestDate: "08/01/2024",
+          projectName: "Desktop Computer Transfer",
+          locationFrom: "Building A - IT Store",
+          locationTo: "Building B - Office",
+          status: "Transfer Report Mismatch",
+          requester: "Kittipong Jaiyen"
+        },
+        {
+          owner: "HR",
+          transferFormId: "TF-2024-0009",
+          requestDate: "07/01/2024",
+          projectName: "HR Equipment Relocation",
+          locationFrom: "HR Department",
+          locationTo: "New HR Office",
+          status: "Pending Review",
+          requester: "Siriporn Chaiyasit"
+        },
+        {
+          owner: "FM",
+          transferFormId: "TF-2024-0010",
+          requestDate: "06/01/2024",
+          projectName: "Cafeteria Equipment",
+          locationFrom: "Old Cafeteria",
+          locationTo: "New Cafeteria",
+          status: "Completed",
+          requester: "Anuchit Pongpan"
         }
       ];
       
       setDashboardData(mockData);
+      // Store in localStorage for future updates
+      localStorage.setItem('dashboardData', JSON.stringify(mockData));
     }
   };
 
   const getStatusChip = (status: string) => {
     switch (status) {
-      case 'Approved':
-        return (
-          <Chip 
-            label="Approved" 
-            color="success" 
-            size="small"
-            sx={{ 
-              fontWeight: 600,
-              fontSize: '0.75rem',
-              height: '24px',
-              '& .MuiChip-label': {
-                px: 1.5
-              }
-            }}
-          />
-        );
       case 'Pending Review':
         return (
           <Chip 
@@ -141,6 +223,45 @@ const DashboardPage: React.FC = () => {
             }}
           />
         );
+      case 'Transfer Report Mismatch':
+        return (
+          <Chip 
+            label="Transfer Report Mismatch" 
+            color="error" 
+            variant="outlined"
+            size="small"
+            sx={{ 
+              fontWeight: 600,
+              fontSize: '0.75rem',
+              height: '24px',
+              borderColor: '#f44336',
+              color: '#f44336',
+              '& .MuiChip-label': {
+                px: 1.5
+              }
+            }}
+          />
+        );
+      case 'Transfer Report Mismatch(Re-Process)':
+        return (
+          <Chip 
+            label="Mismatch (Re-Process)" 
+            color="warning" 
+            variant="outlined"
+            size="small"
+            sx={{ 
+              fontWeight: 600,
+              fontSize: '0.75rem',
+              height: '24px',
+              borderColor: '#ff6f00',
+              color: '#ff6f00',
+              backgroundColor: '#fff3e0',
+              '& .MuiChip-label': {
+                px: 1.5
+              }
+            }}
+          />
+        );
       case 'Reject':
         return (
           <Chip 
@@ -151,6 +272,44 @@ const DashboardPage: React.FC = () => {
               fontWeight: 600,
               fontSize: '0.75rem',
               height: '24px',
+              backgroundColor: '#d32f2f',
+              color: 'white',
+              '& .MuiChip-label': {
+                px: 1.5
+              }
+            }}
+          />
+        );
+      case 'Completed':
+        return (
+          <Chip 
+            label="Completed" 
+            color="success" 
+            size="small"
+            sx={{ 
+              fontWeight: 600,
+              fontSize: '0.75rem',
+              height: '24px',
+              backgroundColor: '#2e7d32',
+              color: 'white',
+              '& .MuiChip-label': {
+                px: 1.5
+              }
+            }}
+          />
+        );
+      case 'Approved':
+        return (
+          <Chip 
+            label="Approved" 
+            color="info" 
+            size="small"
+            sx={{ 
+              fontWeight: 600,
+              fontSize: '0.75rem',
+              height: '24px',
+              backgroundColor: '#0288d1',
+              color: 'white',
               '& .MuiChip-label': {
                 px: 1.5
               }
@@ -226,10 +385,10 @@ const DashboardPage: React.FC = () => {
               <Card>
                 <CardContent>
                   <Typography color="textSecondary" gutterBottom>
-                    Approved
+                    Completed
                   </Typography>
-                  <Typography variant="h5" component="h2">
-                    {dashboardData.filter(item => item.status === 'Approved').length}
+                  <Typography variant="h5" component="h2" sx={{ color: '#2e7d32' }}>
+                    {dashboardData.filter(item => item.status === 'Completed').length}
                   </Typography>
                   <Typography color="textSecondary">
                     Transfer Forms
@@ -243,7 +402,7 @@ const DashboardPage: React.FC = () => {
                   <Typography color="textSecondary" gutterBottom>
                     Pending Review
                   </Typography>
-                  <Typography variant="h5" component="h2">
+                  <Typography variant="h5" component="h2" sx={{ color: '#ff9800' }}>
                     {dashboardData.filter(item => item.status === 'Pending Review').length}
                   </Typography>
                   <Typography color="textSecondary">
@@ -256,10 +415,13 @@ const DashboardPage: React.FC = () => {
               <Card>
                 <CardContent>
                   <Typography color="textSecondary" gutterBottom>
-                    Rejected
+                    Issues / Rejected
                   </Typography>
-                  <Typography variant="h5" component="h2">
-                    {dashboardData.filter(item => item.status === 'Reject').length}
+                  <Typography variant="h5" component="h2" sx={{ color: '#f44336' }}>
+                    {dashboardData.filter(item => 
+                      item.status === 'Reject' || 
+                      item.status.includes('Transfer Report Mismatch')
+                    ).length}
                   </Typography>
                   <Typography color="textSecondary">
                     Transfer Forms
@@ -267,20 +429,7 @@ const DashboardPage: React.FC = () => {
                 </CardContent>
               </Card>
             </Grid>
-          </Grid>
-
-          {/* Action Button */}
-          {/* <Box sx={{ mb: 3 }}>
-            <Button
-              component={RouterLink}
-              to="/detail-list"
-              variant="contained"
-              startIcon={<ViewList />}
-              size="large"
-            >
-              ดูรายละเอียดทั้งหมด
-            </Button>
-          </Box> */}
+          </Grid> 
 
           {/* Data Table */}
           <Typography variant="h6" sx={{ mb: 2 }}>
@@ -323,17 +472,19 @@ const DashboardPage: React.FC = () => {
                             locationFrom: row.locationFrom,
                             locationTo: row.locationTo,
                             projectName: row.projectName,
-                            status: row.status
+                            status: row.status,
+                            historyLog: row.historyLog || []
                           }
                         })}
                         sx={{ 
-                          color: '#1976d2',
+                          color: row.status === 'Pending Review' ? '#ff9800' : '#1976d2',
                           '&:hover': {
-                            bgcolor: 'rgba(25, 118, 210, 0.08)'
+                            bgcolor: row.status === 'Pending Review' ? 'rgba(255, 152, 0, 0.08)' : 'rgba(25, 118, 210, 0.08)'
                           }
                         }}
+                        title={row.status === 'Pending Review' ? "Edit" : "View Details"}
                       >
-                        <Search fontSize="small" />
+                        {row.status === 'Pending Review' ? <Edit fontSize="small" /> : <Search fontSize="small" />}
                       </IconButton>
                     </TableCell>
                     <TableCell component="th" scope="row" sx={{ border: 1, borderColor: '#e0e0e0', py: 1, fontWeight: 600 }}>
@@ -354,6 +505,7 @@ const DashboardPage: React.FC = () => {
           </TableContainer>
         </Box>
       </Box>
+
     </Box>
   );
 };

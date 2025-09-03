@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { AppBar, Toolbar, IconButton, Typography, Box, Tooltip, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { FaBars, FaAngleRight, FaSignOutAlt } from 'react-icons/fa';
 import { RxAvatar } from 'react-icons/rx';
-import './Header/Header.css';
+import './Header.css';
 
 type HeaderProps = {
   onToggleSidebar?: () => void;

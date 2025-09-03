@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
+import { ConfirmProvider } from 'material-ui-confirm'
 import App from './App'
 import './index.css'
 
@@ -22,7 +23,26 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
-        <App />
+        <ConfirmProvider
+          defaultOptions={{
+            confirmationButtonProps: {
+              variant: 'contained'
+            },
+            cancellationButtonProps: {
+              variant: 'outlined'
+            },
+            dialogProps: {
+              maxWidth: 'sm'
+            },
+            titleProps: {
+              sx: {
+                fontWeight: 600
+              }
+            }
+          }}
+        >
+          <App />
+        </ConfirmProvider>
       </BrowserRouter>
     </ThemeProvider>
   </React.StrictMode>,

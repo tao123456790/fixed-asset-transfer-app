@@ -78,11 +78,40 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     return validateForm(formData);
   };
 
+  const clearAllCache = () => {
+    // Clear all localStorage items
+    localStorage.clear();
+    
+    // Clear all sessionStorage items
+    sessionStorage.clear();
+    
+    // Clear specific application cache if using service workers
+    if ('caches' in window) {
+      caches.keys().then(names => {
+        names.forEach(name => {
+          caches.delete(name);
+        });
+      });
+    }
+    
+    // Clear any cookies (if accessible from JavaScript)
+    document.cookie.split(";").forEach((c) => {
+      document.cookie = c
+        .replace(/^ +/, "")
+        .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+    });
+    
+    console.log('All cache and storage cleared successfully');
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
 
     setLoading(true);
+    
+    // Clear all cache before login
+    clearAllCache();
     
     // Add a small delay to show loading effect
     await new Promise(resolve => setTimeout(resolve, 800));
@@ -90,7 +119,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     try {
       // Simple validation - accept any email/password
       if (formData.email && formData.password) {
-        // Save login state
+        // Save login state (after clearing cache)
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('userEmail', formData.email);
         

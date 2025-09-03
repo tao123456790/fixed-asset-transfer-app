@@ -13,7 +13,7 @@ import {
   Tooltip
 } from '@mui/material';
 import { FaHome, FaList, FaBuilding } from 'react-icons/fa';
-import './Sidebar/Sidebar.css';
+import './Sidebar.css';
 
 const drawerWidth = 240;
 
@@ -28,12 +28,7 @@ const navItems: NavItem[] = [
     text: 'Dashboard',
     icon: <FaHome />,
     path: '/dashboard'
-  },
-  {
-    text: 'รายละเอียดทั้งหมด',
-    icon: <FaList />,
-    path: '/detail-list'
-  }
+  }, 
 ];
 
 type AppSidebarProps = {

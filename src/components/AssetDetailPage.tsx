@@ -11,9 +11,9 @@ import {
   Chip,
 } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
-import Header from './Header';
-import AppSidebar from './Sidebar';
-import { AssetRow } from './AssetTransferReportMUI';
+import Header from './Layout/Header/Header';
+import AppSidebar from './Layout/Sidebar/Sidebar';
+import { AssetRow } from './AssetTransferReport';
 
 const AssetDetailPage: React.FC = () => {
   const [assetData, setAssetData] = useState<AssetRow | null>(null);
@@ -44,12 +44,12 @@ const AssetDetailPage: React.FC = () => {
   const loadAssetDetail = async () => {
     try {
       await new Promise(resolve => setTimeout(resolve, 500));
-      
+
       // Load all assets and find the specific one
       const response = await fetch('/data/asset-transfers.json');
       const data = await response.json();
       const asset = data.assetData.find((item: AssetRow) => item.oracleAssetNo === assetNo);
-      
+
       setAssetData(asset || null);
       setLoading(false);
     } catch (error) {
@@ -85,26 +85,26 @@ const AssetDetailPage: React.FC = () => {
   if (loading) {
     return (
       <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-        <AppSidebar 
+        <AppSidebar
           collapsed={sidebarCollapsed}
           isMobile={false}
           mobileOpen={mobileOpen}
           onMobileClose={handleMobileClose}
         />
-        <Box 
-          component="main" 
-          sx={{ 
+        <Box
+          component="main"
+          sx={{
             width: sidebarCollapsed ? 'calc(100% - 60px)' : 'calc(100% - 240px)',
             position: 'absolute',
             left: sidebarCollapsed ? '60px' : '240px',
             top: 0,
             transition: 'width 0.3s ease, left 0.3s ease',
             minHeight: '100vh',
-            display: 'flex', 
-            flexDirection: 'column' 
+            display: 'flex',
+            flexDirection: 'column'
           }}
         >
-          <Header 
+          <Header
             onToggleSidebar={handleToggleSidebar}
             collapsed={sidebarCollapsed}
             isMobile={false}
@@ -120,26 +120,26 @@ const AssetDetailPage: React.FC = () => {
   if (!assetData) {
     return (
       <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-        <AppSidebar 
+        <AppSidebar
           collapsed={sidebarCollapsed}
           isMobile={false}
           mobileOpen={mobileOpen}
           onMobileClose={handleMobileClose}
         />
-        <Box 
-          component="main" 
-          sx={{ 
+        <Box
+          component="main"
+          sx={{
             width: sidebarCollapsed ? 'calc(100% - 60px)' : 'calc(100% - 240px)',
             position: 'absolute',
             left: sidebarCollapsed ? '60px' : '240px',
             top: 0,
             transition: 'width 0.3s ease, left 0.3s ease',
             minHeight: '100vh',
-            display: 'flex', 
-            flexDirection: 'column' 
+            display: 'flex',
+            flexDirection: 'column'
           }}
         >
-          <Header 
+          <Header
             onToggleSidebar={handleToggleSidebar}
             collapsed={sidebarCollapsed}
             isMobile={false}
@@ -161,26 +161,26 @@ const AssetDetailPage: React.FC = () => {
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-      <AppSidebar 
+      <AppSidebar
         collapsed={sidebarCollapsed}
         isMobile={false}
         mobileOpen={mobileOpen}
         onMobileClose={handleMobileClose}
       />
-      <Box 
-        component="main" 
-        sx={{ 
+      <Box
+        component="main"
+        sx={{
           width: sidebarCollapsed ? 'calc(100% - 60px)' : 'calc(100% - 240px)',
           position: 'absolute',
           left: sidebarCollapsed ? '60px' : '240px',
           top: 0,
           transition: 'width 0.3s ease, left 0.3s ease',
           minHeight: '100vh',
-          display: 'flex', 
-          flexDirection: 'column' 
+          display: 'flex',
+          flexDirection: 'column'
         }}
       >
-        <Header 
+        <Header
           onToggleSidebar={handleToggleSidebar}
           collapsed={sidebarCollapsed}
           isMobile={false}
@@ -201,7 +201,7 @@ const AssetDetailPage: React.FC = () => {
 
           <Grid container spacing={3}>
             {/* Asset Information */}
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, sm: 6, md: 6 }}>
               <Card elevation={2}>
                 <CardContent>
                   <Typography variant="h6" sx={{ mb: 2, color: '#1976d2' }}>
@@ -232,7 +232,7 @@ const AssetDetailPage: React.FC = () => {
             </Grid>
 
             {/* Location Information */}
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, sm: 6, md: 6 }}>
               <Card elevation={2}>
                 <CardContent>
                   <Typography variant="h6" sx={{ mb: 2, color: '#1976d2' }}>
@@ -260,7 +260,7 @@ const AssetDetailPage: React.FC = () => {
             </Grid>
 
             {/* Financial Information */}
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, sm: 6, md: 6 }}>
               <Card elevation={2}>
                 <CardContent>
                   <Typography variant="h6" sx={{ mb: 2, color: '#1976d2' }}>
@@ -287,7 +287,7 @@ const AssetDetailPage: React.FC = () => {
             </Grid>
 
             {/* Transfer Information */}
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, sm: 6, md: 6 }}>
               <Card elevation={2}>
                 <CardContent>
                   <Typography variant="h6" sx={{ mb: 2, color: '#1976d2' }}>
@@ -316,31 +316,31 @@ const AssetDetailPage: React.FC = () => {
             </Grid>
 
             {/* Reconciliation Status */}
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12, sm: 6, md: 6 }}> 
               <Card elevation={2}>
                 <CardContent>
                   <Typography variant="h6" sx={{ mb: 2, color: '#1976d2' }}>
                     สถานะการตรวจสอบ (Reconciliation)
                   </Typography>
                   <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
+                    <Grid size={{ xs: 12, sm: 6, md: 6 }}> 
                       <Box sx={{ mb: 2 }}>
                         <Typography variant="subtitle2" color="text.secondary">Transfer Form vs. NBV</Typography>
                         {assetData.transferVsNBV && (
-                          <Chip 
-                            label={assetData.transferVsNBV} 
+                          <Chip
+                            label={assetData.transferVsNBV}
                             color={assetData.transferVsNBV === "Matched" ? "success" : "error"}
                             sx={{ mt: 1 }}
                           />
                         )}
                       </Box>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid size={{ xs: 12, sm: 6, md: 6 }}> 
                       <Box sx={{ mb: 2 }}>
                         <Typography variant="subtitle2" color="text.secondary">Transfer Report vs. FBDI</Typography>
                         {assetData.transferVsFBDI && (
-                          <Chip 
-                            label={assetData.transferVsFBDI} 
+                          <Chip
+                            label={assetData.transferVsFBDI}
                             color={assetData.transferVsFBDI === "Matched" ? "success" : "error"}
                             sx={{ mt: 1 }}
                           />

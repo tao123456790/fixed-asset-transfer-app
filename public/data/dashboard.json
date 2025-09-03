@@ -8,7 +8,16 @@
       "locationFrom": "Building A - Floor 3",
       "locationTo": "Building B - Floor 2",
       "status": "Pending Review",
-      "requester": "Jarinya Phosri"
+      "requester": "Jarinya Phosri",
+      "historyLog": [
+        {
+          "id": "1",
+          "status": "Pending Review",
+          "timestamp": "2024-01-15T09:00:00Z",
+          "user": "Jarinya Phosri",
+          "comment": "เริ่มต้นการร้องขอการโอนย้ายทรัพย์สิน"
+        }
+      ]
     },
     {
       "owner": "FM",
@@ -17,8 +26,24 @@
       "projectName": "Furniture Relocation",
       "locationFrom": "Warehouse 1",
       "locationTo": "Office Floor 5",
-      "status": "Reject",
-      "requester": "Chanpen Manu"
+      "status": "Transfer Report Mismatch",
+      "requester": "Chanpen Manu",
+      "historyLog": [
+        {
+          "id": "1",
+          "status": "Pending Review",
+          "timestamp": "2024-01-14T10:30:00Z",
+          "user": "Chanpen Manu",
+          "comment": "เริ่มต้นการร้องขอการโอนย้ายเฟอร์นิเจอร์"
+        },
+        {
+          "id": "2",
+          "status": "Transfer Report Mismatch",
+          "timestamp": "2024-01-16T14:15:00Z",
+          "user": "Admin",
+          "comment": "พบความไม่ตรงกันในรายงานการโอนย้าย - จำนวนเฟอร์นิเจอร์ไม่ตรงกับในระบบ"
+        }
+      ]
     },
     {
       "owner": "IT",
@@ -27,28 +52,199 @@
       "projectName": "Server Room Equipment",
       "locationFrom": "Data Center",
       "locationTo": "Backup Site",
-      "status": "Approved",
-      "requester": "Somchai Jaidee"
+      "status": "Completed",
+      "requester": "Somchai Jaidee",
+      "historyLog": [
+        {
+          "id": "1",
+          "status": "Pending Review",
+          "timestamp": "2024-01-13T08:00:00Z",
+          "user": "Somchai Jaidee",
+          "comment": "เริ่มต้นการร้องขอการโอนย้ายอุปกรณ์ Server"
+        },
+        {
+          "id": "2",
+          "status": "Completed",
+          "timestamp": "2024-01-15T16:30:00Z",
+          "user": "IT Admin",
+          "comment": "การโอนย้ายเสร็จสมบูรณ์ทุกรายการตรงกับแผน"
+        }
+      ]
     },
     {
-      "owner": "FM",
+      "owner": "HR",
       "transferFormId": "TF-2024-0004",
       "requestDate": "12/01/2024",
-      "projectName": "Office Desk Relocation",
-      "locationFrom": "Floor 2",
-      "locationTo": "Floor 4",
-      "status": "Approved",
-      "requester": "Nattapong Srisuk"
+      "projectName": "Training Room Setup",
+      "locationFrom": "Building C - Floor 2",
+      "locationTo": "Training Center",
+      "status": "Transfer Report Mismatch(Re-Process)",
+      "requester": "Suchada Kaewpong",
+      "historyLog": [
+        {
+          "id": "1",
+          "status": "Pending Review",
+          "timestamp": "2024-01-12T11:00:00Z",
+          "user": "Suchada Kaewpong",
+          "comment": "ร้องขอการจัดตั้งห้องอบรมใหม่"
+        },
+        {
+          "id": "2",
+          "status": "Transfer Report Mismatch",
+          "timestamp": "2024-01-14T13:20:00Z",
+          "user": "Admin",
+          "comment": "พบปัญหาการบันทึกข้อมูลอุปกรณ์ไม่ถูกต้อง"
+        },
+        {
+          "id": "3",
+          "status": "Transfer Report Mismatch(Re-Process)",
+          "timestamp": "2024-01-16T09:45:00Z",
+          "user": "HR Admin",
+          "comment": "กำลังดำเนินการแก้ไขข้อมูลและประมวลผลใหม่"
+        }
+      ]
     },
     {
       "owner": "IT",
       "transferFormId": "TF-2024-0005",
       "requestDate": "11/01/2024",
-      "projectName": "Printer Movement",
-      "locationFrom": "Room 201",
-      "locationTo": "Room 305",
+      "projectName": "Network Equipment Migration",
+      "locationFrom": "Server Room A",
+      "locationTo": "Server Room B",
+      "status": "Reject",
+      "requester": "Prasit Wongsawat",
+      "historyLog": [
+        {
+          "id": "1",
+          "status": "Pending Review",
+          "timestamp": "2024-01-11T15:30:00Z",
+          "user": "Prasit Wongsawat",
+          "comment": "ร้องขอการย้ายอุปกรณ์เครือข่าย"
+        },
+        {
+          "id": "2",
+          "status": "Reject",
+          "timestamp": "2024-01-13T10:00:00Z",
+          "user": "IT Manager",
+          "comment": "ไม่สามารถอนุมัติได้เนื่องจากห้อง Server B ยังไม่พร้อมใช้งาน และมีความเสี่ยงในการขัดจังหวะการให้บริการ"
+        }
+      ]
+    },
+    {
+      "owner": "FM",
+      "transferFormId": "TF-2024-0006",
+      "requestDate": "10/01/2024",
+      "projectName": "Office Renovation Assets",
+      "locationFrom": "Floor 7",
+      "locationTo": "Temporary Storage",
       "status": "Pending Review",
-      "requester": "Suphansa Kaewphan"
+      "requester": "Nattapong Srisuk",
+      "historyLog": [
+        {
+          "id": "1",
+          "status": "Pending Review",
+          "timestamp": "2024-01-10T12:15:00Z",
+          "user": "Nattapong Srisuk",
+          "comment": "ร้องขอการย้ายทรัพย์สินเพื่อการปรับปรุงสำนักงาน"
+        }
+      ]
+    },
+    {
+      "owner": "ACC",
+      "transferFormId": "TF-2024-0007",
+      "requestDate": "09/01/2024",
+      "projectName": "Finance Office Equipment",
+      "locationFrom": "Accounting Dept",
+      "locationTo": "Finance Dept",
+      "status": "Completed",
+      "requester": "Wipada Tangthai",
+      "historyLog": [
+        {
+          "id": "1",
+          "status": "Pending Review",
+          "timestamp": "2024-01-09T14:00:00Z",
+          "user": "Wipada Tangthai",
+          "comment": "ร้องขอการโอนย้ายอุปกรณ์สำนักงานการเงิน"
+        },
+        {
+          "id": "2",
+          "status": "Completed",
+          "timestamp": "2024-01-11T11:30:00Z",
+          "user": "Finance Manager",
+          "comment": "การโอนย้ายเสร็จสมบูรณ์ตามแผนที่กำหนด"
+        }
+      ]
+    },
+    {
+      "owner": "IT",
+      "transferFormId": "TF-2024-0008",
+      "requestDate": "08/01/2024",
+      "projectName": "Desktop Computer Transfer",
+      "locationFrom": "Building A - IT Store",
+      "locationTo": "Building B - Office",
+      "status": "Transfer Report Mismatch",
+      "requester": "Kittipong Jaiyen",
+      "historyLog": [
+        {
+          "id": "1",
+          "status": "Pending Review",
+          "timestamp": "2024-01-08T16:45:00Z",
+          "user": "Kittipong Jaiyen",
+          "comment": "ร้องขอการโอนย้ายคอมพิวเตอร์เดสก์ท็อป"
+        },
+        {
+          "id": "2",
+          "status": "Transfer Report Mismatch",
+          "timestamp": "2024-01-10T08:30:00Z",
+          "user": "IT Admin",
+          "comment": "พบปัญหา Serial Number ของคอมพิวเตอร์บางเครื่องไม่ตรงกับในระบบ"
+        }
+      ]
+    },
+    {
+      "owner": "HR",
+      "transferFormId": "TF-2024-0009",
+      "requestDate": "07/01/2024",
+      "projectName": "HR Equipment Relocation",
+      "locationFrom": "HR Department",
+      "locationTo": "New HR Office",
+      "status": "Pending Review",
+      "requester": "Siriporn Chaiyasit",
+      "historyLog": [
+        {
+          "id": "1",
+          "status": "Pending Review",
+          "timestamp": "2024-01-07T13:20:00Z",
+          "user": "Siriporn Chaiyasit",
+          "comment": "ร้องขอการย้ายอุปกรณ์ HR ไปยังสำนักงานใหม่"
+        }
+      ]
+    },
+    {
+      "owner": "FM",
+      "transferFormId": "TF-2024-0010",
+      "requestDate": "06/01/2024",
+      "projectName": "Cafeteria Equipment",
+      "locationFrom": "Old Cafeteria",
+      "locationTo": "New Cafeteria",
+      "status": "Completed",
+      "requester": "Anuchit Pongpan",
+      "historyLog": [
+        {
+          "id": "1",
+          "status": "Pending Review",
+          "timestamp": "2024-01-06T10:00:00Z",
+          "user": "Anuchit Pongpan",
+          "comment": "ร้องขอการย้ายอุปกรณ์โรงอาหาร"
+        },
+        {
+          "id": "2",
+          "status": "Completed",
+          "timestamp": "2024-01-08T15:00:00Z",
+          "user": "FM Manager",
+          "comment": "การย้ายอุปกรณ์โรงอาหารเสร็จสิ้นเรียบร้อยแล้ว"
+        }
+      ]
     }
   ]
 }
