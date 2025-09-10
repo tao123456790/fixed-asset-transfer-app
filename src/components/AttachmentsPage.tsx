@@ -51,7 +51,7 @@ interface Attachment {
   uploadDate: string;
   uploadedBy: string;
   description?: string;
-  category: 'transfer_form' | 'nbv' | 'approve' | 'fbdi';
+  category: 'transfer_form' | 'nbv' | 'approve' | 'fbdi' | 're-process';
 }
 
 interface AttachmentsPageProps {
@@ -110,9 +110,19 @@ const AttachmentsPage: React.FC<AttachmentsPageProps> = ({ transferFormData }) =
       description: 'FBDI import template',
       category: 'fbdi',
     },
+    {
+      id: '6',
+      name: 'reprocess_correction.xlsx',
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      size: 234567,
+      uploadDate: '2025-01-16',
+      uploadedBy: 'System Admin',
+      description: 'Re-process correction document',
+      category: 're-process',
+    },
   ]);
 
-  const [selectedCategory, setSelectedCategory] = useState<'transfer_form' | 'nbv' | 'approve' | 'fbdi'>('transfer_form');
+  const [selectedCategory, setSelectedCategory] = useState<'transfer_form' | 'nbv' | 'approve' | 'fbdi' | 're-process'>('transfer_form');
   const [openUploadDialog, setOpenUploadDialog] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [fileDescription, setFileDescription] = useState('');
@@ -164,6 +174,22 @@ const AttachmentsPage: React.FC<AttachmentsPageProps> = ({ transferFormData }) =
       acceptedTypes: '.xlsx,.xls',
       acceptedMimes: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'],
       description: 'Excel files only',
+    },
+    're-process': {
+      label: 'Re-Process',
+      shortLabel: 'Re-Process',
+      color: '#FF5722',
+      acceptedTypes: '.xlsx,.xls,.doc,.docx,.jpg,.jpeg,.pdf,.png',
+      acceptedMimes: [
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/msword',
+        'image/jpeg',
+        'application/pdf',
+        'image/png'
+      ],
+      description: 'Excel, Word, JPG, PDF, PNG',
     },
   };
 
@@ -574,11 +600,11 @@ const AttachmentsPage: React.FC<AttachmentsPageProps> = ({ transferFormData }) =
     );
   };
 
-  const getAttachmentsByCategory = (category: 'transfer_form' | 'nbv' | 'approve' | 'fbdi') => {
+  const getAttachmentsByCategory = (category: 'transfer_form' | 'nbv' | 'approve' | 'fbdi' | 're-process') => {
     return attachments.filter(att => att.category === category);
   };
 
-  const handleCategoryChange = (event: React.MouseEvent<HTMLElement>, newCategory: 'transfer_form' | 'nbv' | 'approve' | 'fbdi' | null) => {
+  const handleCategoryChange = (event: React.MouseEvent<HTMLElement>, newCategory: 'transfer_form' | 'nbv' | 'approve' | 'fbdi' | 're-process' | null) => {
     if (newCategory !== null) {
       setSelectedCategory(newCategory);
     }
@@ -604,7 +630,7 @@ const AttachmentsPage: React.FC<AttachmentsPageProps> = ({ transferFormData }) =
           sx={{ mb: 3, display: 'flex', gap: 2 }}
         >
           {Object.entries(categoryConfig).map(([key, conf]) => {
-            const categoryKey = key as 'transfer_form' | 'nbv' | 'approve' | 'fbdi';
+            const categoryKey = key as 'transfer_form' | 'nbv' | 'approve' | 'fbdi' | 're-process';
             const fileCount = getAttachmentsByCategory(categoryKey).length;
             const isSelected = selectedCategory === categoryKey;
             

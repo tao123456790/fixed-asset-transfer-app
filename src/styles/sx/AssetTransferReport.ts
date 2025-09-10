@@ -322,9 +322,29 @@ export const sxAssetTransferReport = {
     fontSize: '16px' 
   } as Sx,
 
+  // Export button section
+  exportButtonSection: { 
+    mt: 3, 
+    mb: 2 
+  } as Sx,
+
+  exportButton: {
+    fontSize: '16px',
+    fontWeight: 600,
+    px: 4,
+    py: 1.5,
+    borderRadius: 2,
+    borderWidth: 2,
+    '&:hover': {
+      borderWidth: 2,
+      backgroundColor: 'primary.light',
+      color: 'white'
+    }
+  } as Sx,
+
   // Action buttons section
   actionButtonsSection: { 
-    mt: 3, 
+    mt: 1, 
     mb: 2 
   } as Sx,
 
@@ -349,6 +369,215 @@ export const sxAssetTransferReport = {
   matchedChip: { 
     fontWeight: 600,
     fontSize: '12px'
+  } as Sx,
+
+  // Accordion styles
+  historyAccordion: {
+    mb: 3
+  } as Sx,
+
+  accordionSummary: {
+    bgcolor: '#f8f9fa',
+    border: '1px solid #dee2e6',
+    '&:hover': {
+      bgcolor: '#e9ecef'
+    }
+  } as Sx,
+
+  accordionIcon: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 1
+  } as Sx,
+
+  historyIcon: {
+    color: '#6c757d'
+  } as Sx,
+
+  historyTitle: {
+    fontWeight: 600,
+    color: '#495057'
+  } as Sx,
+
+  historyChip: {
+    ml: 1
+  } as Sx,
+
+  accordionDetails: {
+    p: 0
+  } as Sx,
+
+  // Table header cells with dynamic width
+  greenHeaderCell: (width: number) => ({
+    bgcolor: '#4caf50',
+    color: 'white',
+    border: 2,
+    borderColor: '#388e3c',
+    py: 1.5,
+    width: width,
+    position: 'relative'
+  } as Sx),
+
+  orangeHeaderCell: (width: number) => ({
+    bgcolor: '#ff9800',
+    color: 'white',
+    border: 2,
+    borderColor: '#f57c00',
+    py: 1.5,
+    width: width,
+    position: 'relative'
+  } as Sx),
+
+  // Sub header cells
+  blueSubHeaderCell: (width: number) => ({
+    bgcolor: '#bbdefb',
+    border: 2,
+    borderColor: '#1976d2',
+    py: 1,
+    width: width,
+    position: 'relative'
+  } as Sx),
+
+  purpleSubHeaderCell: (width: number) => ({
+    bgcolor: '#e1bee7',
+    border: 2,
+    borderColor: '#7b1fa2',
+    py: 1,
+    width: width,
+    position: 'relative'
+  } as Sx),
+
+  // Table body row
+  bodyRow: {
+    '&:hover': {
+      bgcolor: '#f8f9fa'
+    },
+    '&:nth-of-type(even)': {
+      bgcolor: '#fafafa'
+    }
+  } as Sx,
+
+  // Dynamic table cells
+  dynamicCell: (width: number) => ({
+    border: 1,
+    borderColor: '#e0e0e0',
+    fontWeight: 600,
+    py: 1,
+    width: width,
+    fontSize: '12px'
+  } as Sx),
+
+  dynamicStandardCell: (width: number) => ({
+    border: 1,
+    borderColor: '#e0e0e0',
+    py: 1,
+    width: width,
+    fontSize: '12px'
+  } as Sx),
+
+  dynamicRightAlignCell: (width: number) => ({
+    border: 1,
+    borderColor: '#e0e0e0',
+    textAlign: "right",
+    py: 1,
+    width: width,
+    fontSize: '12px'
+  } as Sx),
+
+  dynamicMonospaceCell: (width: number) => ({
+    border: 1,
+    borderColor: '#e0e0e0',
+    fontFamily: 'monospace',
+    fontSize: '12px',
+    py: 1,
+    width: width
+  } as Sx),
+
+  dynamicNoWrapCell: (width: number) => ({
+    border: 1,
+    borderColor: '#e0e0e0',
+    whiteSpace: "nowrap",
+    py: 1,
+    width: width,
+    fontSize: '12px'
+  } as Sx),
+
+  // Money text
+  moneyTypography: {
+    fontSize: '12px'
+  } as Sx,
+
+  // Chip styles
+  statusChip: {
+    fontWeight: 600,
+    fontSize: '12px'
+  } as Sx,
+
+  // Row sticky styles
+  stickySubHeaderRow: {
+    position: 'sticky',
+    top: '56px',
+    zIndex: 101,
+    '& .MuiTableCell-root': {
+      position: 'sticky',
+      top: '56px',
+      zIndex: 101
+    }
+  } as Sx,
+
+  // Total row styles
+  grandTotalRow: {
+    bgcolor: '#f5f5f5'
+  } as Sx,
+
+  grandTotalLabelCell: {
+    border: 1,
+    borderColor: '#ccc',
+    fontWeight: 700,
+    py: 1.5,
+    bgcolor: '#e0e0e0',
+    fontSize: '16px'
+  } as Sx,
+
+  grandTotalValueCell: {
+    border: 1,
+    borderColor: '#ccc',
+    bgcolor: '#fff3e0',
+    py: 1.5,
+    fontSize: '16px'
+  } as Sx,
+
+  grandTotalPurpleValueCell: {
+    border: 1,
+    borderColor: '#ccc',
+    bgcolor: '#e1bee7',
+    py: 1.5,
+    fontSize: '16px'
+  } as Sx,
+
+  grandTotalGreenValueCell: {
+    border: 1,
+    borderColor: '#ccc',
+    bgcolor: '#c8e6c9',
+    py: 1.5,
+    fontSize: '16px'
+  } as Sx,
+
+  grandTotalEmptyCell: {
+    border: 1,
+    borderColor: '#ccc',
+    bgcolor: '#e0e0e0',
+    fontSize: '14px'
+  } as Sx,
+
+  grandTotalTypography: {
+    fontWeight: 700,
+    fontSize: '16px'
+  } as Sx,
+
+  grandTotalMoneyTypography: {
+    fontWeight: 700,
+    fontSize: '16px'
   } as Sx,
 
 };

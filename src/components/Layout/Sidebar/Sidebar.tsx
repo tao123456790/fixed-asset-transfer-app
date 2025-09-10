@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Drawer,
@@ -10,9 +10,11 @@ import {
   Divider,
   Typography,
   Box,
-  Tooltip
+  Tooltip,
+  Collapse
 } from '@mui/material';
-import { FaHome, FaList, FaBuilding } from 'react-icons/fa';
+import { FaHome, FaList, FaBuilding, FaStore, FaChartLine } from 'react-icons/fa';
+import { MdExpandMore, MdExpandLess, MdDataset } from 'react-icons/md';
 import './Sidebar.css';
 
 const drawerWidth = 240;
@@ -20,7 +22,12 @@ const drawerWidth = 240;
 interface NavItem {
   text: string;
   icon: React.ReactNode;
-  path: string;
+  path?: string;
+  subItems?: {
+    text: string;
+    icon: React.ReactNode;
+    path: string;
+  }[];
 }
 
 const navItems: NavItem[] = [
@@ -28,7 +35,23 @@ const navItems: NavItem[] = [
     text: 'Dashboard',
     icon: <FaHome />,
     path: '/dashboard'
-  }, 
+  },
+  {
+    text: 'Master Data',
+    icon: <MdDataset />,
+    subItems: [
+      {
+        text: 'Store Profile Master',
+        icon: <FaStore />,
+        path: '/master-data/store-profile'
+      },
+      // {
+      //   text: 'LOB Master',
+      //   icon: <FaChartLine />,
+      //   path: '/master-data/lob'
+      // }
+    ]
+  }
 ];
 
 type AppSidebarProps = {
@@ -46,12 +69,21 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
 }) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const [expandedMenus, setExpandedMenus] = useState<string[]>(['Master Data']);
 
   const handleMenuClick = (path: string) => {
     navigate(path);
     if (isMobile && onMobileClose) {
       onMobileClose();
     }
+  };
+
+  const handleToggleExpand = (menuText: string) => {
+    setExpandedMenus(prev =>
+      prev.includes(menuText)
+        ? prev.filter(item => item !== menuText)
+        : [...prev, menuText]
+    );
   };
 
   const sidebarContent = (
@@ -97,56 +129,152 @@ const AppSidebar: React.FC<AppSidebarProps> = ({
       {/* Menu Items */}
       <List sx={{ pt: 2, flex: 1 }}>
         {navItems.map((item) => (
-          <Tooltip
-            key={item.path}
-            title={collapsed && !isMobile ? item.text : ''}
-            placement="right"
-            arrow
-          >
-            <ListItem disablePadding sx={{ mb: 0.5 }}>
-              <ListItemButton
-                onClick={() => handleMenuClick(item.path)}
-                selected={pathname === item.path}
-                sx={{
-                  mx: 1,
-                  borderRadius: 1,
-                  minHeight: 44,
-                  justifyContent: collapsed && !isMobile ? 'center' : 'flex-start',
-                  px: collapsed && !isMobile ? 0 : 2,
-                  '&.Mui-selected': {
-                    backgroundColor: '#1976d2',
-                    color: 'white',
-                    '& .MuiListItemIcon-root': {
-                      color: 'white'
-                    },
-                    '&:hover': {
-                      backgroundColor: '#1565c0'
-                    }
-                  },
-                  '&:hover': {
-                    backgroundColor: 'rgba(25, 118, 210, 0.1)'
-                  }
-                }}
+          <React.Fragment key={item.text}>
+            {item.path ? (
+              // Regular menu item
+              <Tooltip
+                title={collapsed && !isMobile ? item.text : ''}
+                placement="right"
+                arrow
               >
-                <ListItemIcon sx={{ 
-                  minWidth: collapsed && !isMobile ? 0 : 40,
-                  justifyContent: 'center',
-                  color: pathname === item.path ? 'white' : '#ccc'
-                }}>
-                  {item.icon}
-                </ListItemIcon>
-                {(!collapsed || isMobile) && (
-                  <ListItemText 
-                    primary={item.text}
-                    primaryTypographyProps={{
-                      fontSize: 14,
-                      fontWeight: pathname === item.path ? 'bold' : 'normal'
+                <ListItem disablePadding sx={{ mb: 0.5 }}>
+                  <ListItemButton
+                    onClick={() => item.path && handleMenuClick(item.path)}
+                    selected={pathname === item.path}
+                    sx={{
+                      mx: 1,
+                      borderRadius: 1,
+                      minHeight: 44,
+                      justifyContent: collapsed && !isMobile ? 'center' : 'flex-start',
+                      px: collapsed && !isMobile ? 0 : 2,
+                      '&.Mui-selected': {
+                        backgroundColor: '#1976d2',
+                        color: 'white',
+                        '& .MuiListItemIcon-root': {
+                          color: 'white'
+                        },
+                        '&:hover': {
+                          backgroundColor: '#1565c0'
+                        }
+                      },
+                      '&:hover': {
+                        backgroundColor: 'rgba(25, 118, 210, 0.1)'
+                      }
                     }}
-                  />
+                  >
+                    <ListItemIcon sx={{ 
+                      minWidth: collapsed && !isMobile ? 0 : 40,
+                      justifyContent: 'center',
+                      color: pathname === item.path ? 'white' : '#ccc'
+                    }}>
+                      {item.icon}
+                    </ListItemIcon>
+                    {(!collapsed || isMobile) && (
+                      <ListItemText 
+                        primary={item.text}
+                        primaryTypographyProps={{
+                          fontSize: 14,
+                          fontWeight: pathname === item.path ? 'bold' : 'normal'
+                        }}
+                      />
+                    )}
+                  </ListItemButton>
+                </ListItem>
+              </Tooltip>
+            ) : (
+              // Expandable menu item with subItems
+              <>
+                <Tooltip
+                  title={collapsed && !isMobile ? item.text : ''}
+                  placement="right"
+                  arrow
+                >
+                  <ListItem disablePadding sx={{ mb: 0.5 }}>
+                    <ListItemButton
+                      onClick={() => handleToggleExpand(item.text)}
+                      sx={{
+                        mx: 1,
+                        borderRadius: 1,
+                        minHeight: 44,
+                        justifyContent: collapsed && !isMobile ? 'center' : 'flex-start',
+                        px: collapsed && !isMobile ? 0 : 2,
+                        '&:hover': {
+                          backgroundColor: 'rgba(25, 118, 210, 0.1)'
+                        }
+                      }}
+                    >
+                      <ListItemIcon sx={{ 
+                        minWidth: collapsed && !isMobile ? 0 : 40,
+                        justifyContent: 'center',
+                        color: '#ccc'
+                      }}>
+                        {item.icon}
+                      </ListItemIcon>
+                      {(!collapsed || isMobile) && (
+                        <>
+                          <ListItemText 
+                            primary={item.text}
+                            primaryTypographyProps={{
+                              fontSize: 14,
+                              fontWeight: 'normal'
+                            }}
+                          />
+                          {expandedMenus.includes(item.text) ? <MdExpandLess /> : <MdExpandMore />}
+                        </>
+                      )}
+                    </ListItemButton>
+                  </ListItem>
+                </Tooltip>
+                {(!collapsed || isMobile) && (
+                  <Collapse in={expandedMenus.includes(item.text)} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                      {item.subItems?.map((subItem) => (
+                        <ListItem key={subItem.path} disablePadding sx={{ mb: 0.5 }}>
+                          <ListItemButton
+                            onClick={() => handleMenuClick(subItem.path)}
+                            selected={pathname === subItem.path}
+                            sx={{
+                              mx: 1,
+                              pl: 4,
+                              borderRadius: 1,
+                              minHeight: 40,
+                              '&.Mui-selected': {
+                                backgroundColor: '#1976d2',
+                                color: 'white',
+                                '& .MuiListItemIcon-root': {
+                                  color: 'white'
+                                },
+                                '&:hover': {
+                                  backgroundColor: '#1565c0'
+                                }
+                              },
+                              '&:hover': {
+                                backgroundColor: 'rgba(25, 118, 210, 0.1)'
+                              }
+                            }}
+                          >
+                            <ListItemIcon sx={{ 
+                              minWidth: 35,
+                              color: pathname === subItem.path ? 'white' : '#aaa'
+                            }}>
+                              {subItem.icon}
+                            </ListItemIcon>
+                            <ListItemText 
+                              primary={subItem.text}
+                              primaryTypographyProps={{
+                                fontSize: 13,
+                                fontWeight: pathname === subItem.path ? 'bold' : 'normal'
+                              }}
+                            />
+                          </ListItemButton>
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Collapse>
                 )}
-              </ListItemButton>
-            </ListItem>
-          </Tooltip>
+              </>
+            )}
+          </React.Fragment>
         ))}
       </List>
       

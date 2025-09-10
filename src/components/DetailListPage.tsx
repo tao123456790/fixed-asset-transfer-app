@@ -56,7 +56,39 @@ const DetailListPage: React.FC = () => {
   const [tabValue, setTabValue] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
-  const transferFormData = location.state;
+  
+  // Get the latest data from localStorage instead of just using location.state
+  const getLatestTransferFormData = () => {
+    const initialData = location.state;
+    if (!initialData?.transferFormId) return initialData;
+    
+    // Try to get latest data from localStorage
+    const storedData = localStorage.getItem('dashboardData');
+    if (storedData) {
+      try {
+        const dashboardData = JSON.parse(storedData);
+        const latestData = dashboardData.find((item: any) => 
+          item.transferFormId === initialData.transferFormId
+        );
+        
+        if (latestData) {
+          // Merge latest data with initial data (latest data takes precedence)
+          return {
+            ...initialData,
+            historyLog: latestData.historyLog || [],
+            status: latestData.status,
+            rejectReason: latestData.rejectReason
+          };
+        }
+      } catch (error) {
+        console.error('Error loading latest data from localStorage:', error);
+      }
+    }
+    
+    return initialData;
+  };
+  
+  const transferFormData = getLatestTransferFormData();
 
   const handleToggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
@@ -99,6 +131,8 @@ const DetailListPage: React.FC = () => {
           toLocation: "MINI SUPERMARKET - CPFM / THANASIT POINT2",
           oracleAssetNo: "TH2101760",
           assetBarcode: "BC001234",
+          assetNoWithChild: "Y",
+          transferType: "Fully",
           description: "Bracket, Bracket D350, x 35 x - (Model: D350, Serial: SN12345, Color: white)",
           lifeYear: 6.08,
           assetStartDate: "2021-10-05",
@@ -116,6 +150,8 @@ const DetailListPage: React.FC = () => {
           toLocation: "MINI SUPERMARKET - CPFM / THANASIT POINT2",
           oracleAssetNo: "TH2101761",
           assetBarcode: "BC001235",
+          assetNoWithChild: "N",
+          transferType: "Partial",
           description: "Display Shelf Unit, 5-Tier (Model: SH500, Serial: SN23456)",
           lifeYear: 5.50,
           assetStartDate: "2021-10-21",
@@ -133,6 +169,8 @@ const DetailListPage: React.FC = () => {
           toLocation: "MINI SUPERMARKET - CPFM / SIAM SQUARE",
           oracleAssetNo: "TH2101800",
           assetBarcode: "BC001300",
+          assetNoWithChild: "Y",
+          transferType: "Partial",
           description: "Refrigerator, Commercial 2-Door (Model: RF2000, Serial: RF45678)",
           lifeYear: 8.00,
           assetStartDate: "2020-05-15",
@@ -150,6 +188,8 @@ const DetailListPage: React.FC = () => {
           toLocation: "MINI SUPERMARKET - CPFM / SIAM SQUARE",
           oracleAssetNo: "TH2101801",
           assetBarcode: "BC001301",
+          assetNoWithChild: "N",
+          transferType: "Fully",
           description: "Cash Register System (Model: CR300, Serial: CR78901)",
           lifeYear: 4.00,
           assetStartDate: "2022-01-10",
@@ -167,6 +207,8 @@ const DetailListPage: React.FC = () => {
           toLocation: "MINI SUPERMARKET - CPFM / CENTRAL WORLD",
           oracleAssetNo: "TH2101900",
           assetBarcode: "BC001400",
+          assetNoWithChild: "Y",
+          transferType: "Fully",
           description: "Air Conditioning Unit, 36000 BTU (Model: AC36K, Serial: AC34567)",
           lifeYear: 10.00,
           assetStartDate: "2019-06-20",

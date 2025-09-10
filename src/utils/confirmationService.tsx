@@ -1,5 +1,224 @@
 import { useConfirm } from 'material-ui-confirm';
-import { CheckCircle, Cancel, Warning, Info, Help } from '@mui/icons-material';
+import { CheckCircle, Cancel, Warning, Info, Help, Upload } from '@mui/icons-material';
+import { Typography, TextField, Button, Stack, Chip } from '@mui/material';
+import { Box } from '@mui/system';
+import React from 'react';
+
+export const createConfirmReject = (confirm: any) => {
+  return async (transferFormId?: string): Promise<string> => {
+    let commentValue = '';
+    let confirmButtonRef: React.MutableRefObject<HTMLButtonElement | null> = { current: null };
+
+    const RejectContent: React.FC = () => {
+      const [comment, setComment] = React.useState('');
+      const [isButtonDisabled, setIsButtonDisabled] = React.useState(true);
+
+      React.useEffect(() => {
+        commentValue = comment;
+        const disabled = !comment.trim();
+        setIsButtonDisabled(disabled);
+        
+        // Update the confirm button disabled state
+        if (confirmButtonRef.current) {
+          confirmButtonRef.current.disabled = disabled;
+          confirmButtonRef.current.style.opacity = disabled ? '0.5' : '1';
+          confirmButtonRef.current.style.cursor = disabled ? 'not-allowed' : 'pointer';
+        }
+      }, [comment]);
+
+      React.useEffect(() => {
+        // Get the confirm button after component mounts
+        const timer = setTimeout(() => {
+          const confirmButton = document.querySelector('[data-testid="confirm-button"]') as HTMLButtonElement ||
+                               document.querySelector('button.MuiButton-containedError') as HTMLButtonElement;
+          if (confirmButton) {
+            confirmButtonRef.current = confirmButton;
+            confirmButton.disabled = true;
+            confirmButton.style.opacity = '0.5';
+            confirmButton.style.cursor = 'not-allowed';
+          }
+        }, 100);
+        
+        return () => clearTimeout(timer);
+      }, []);
+
+      return (
+        <TextField
+          label="Comment (Required) *"
+          placeholder="Enter your rejection reason here..."
+          multiline
+          rows={4}
+          variant="outlined"
+          fullWidth
+          autoFocus
+          value={comment}
+          onChange={(e) => {
+            setComment(e.target.value);
+            commentValue = e.target.value;
+          }}
+          error={!comment && comment !== ''}
+          helperText={!comment.trim() && comment !== '' ? "Comment is required" : "Please provide a reason for rejection"}
+        />
+      );
+    };
+
+    const { confirmed } = await confirm({
+      title: 'Reject Transfer Form',
+      description: transferFormId ? (
+        <Box sx={{ mb: 1, mt: 1 }}>
+          <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>
+            {`Transfer Form ID: ${transferFormId}`}
+          </Typography>
+          <Typography variant="body2" color="error">
+            You must provide a comment to reject this transfer form.
+          </Typography>
+        </Box>
+      ) : (
+        <Typography variant="body2" color="error">
+          You must provide a comment to reject this transfer form.
+        </Typography>
+      ),
+      content: <RejectContent />,
+      allowClose: false,
+      dialogProps: { maxWidth: 'sm', fullWidth: true },
+      confirmationText: 'Confirm Reject',
+      cancellationText: 'Cancel',
+      confirmationButtonProps: { 
+        color: 'error', 
+        variant: 'contained', 
+        startIcon: <Cancel />,
+        'data-testid': 'confirm-button'
+      },
+      cancellationButtonProps: { color: 'inherit' },
+    });
+
+    if (!confirmed) throw new Error('cancelled');
+
+    const value = commentValue.trim();
+    if (!value) {
+      throw new Error('Comment is required for rejection');
+    }
+
+    return value;
+  };
+};
+
+export const createConfirmReProcess = (confirm: any) => {
+  return async (transferFormId?: string): Promise<{ comment: string, files: File[] }> => {
+    // Refs สำหรับเก็บค่า
+    const commentRef = { current: '' as string };
+    const filesRef = { current: [] as File[] };
+
+    const ReProcessContent: React.FC = () => {
+      const [comment, setComment] = React.useState('');
+      const [selectedFiles, setSelectedFiles] = React.useState<File[]>([]);
+      const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+      // Update refs when values change
+      React.useEffect(() => {
+        commentRef.current = comment;
+      }, [comment]);
+
+      React.useEffect(() => {
+        filesRef.current = selectedFiles;
+      }, [selectedFiles]);
+
+      const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(event.target.files || []);
+        setSelectedFiles(prev => [...prev, ...files]);
+      };
+
+      const handleRemoveFile = (index: number) => {
+        setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+      };
+
+      return (
+        <Box sx={{ mt: 2 }}>
+          <TextField
+            label="Comment"
+            placeholder="Enter your re-process comment here... (Optional)"
+            multiline
+            rows={4}
+            variant="outlined"
+            fullWidth
+            autoFocus
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            helperText="Optional: Provide additional information about the re-process"
+            sx={{ mb: 2 }}
+          />
+
+          <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 2 }}>
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              accept=".pdf,.doc,.docx,.xlsx,.xls,.png,.jpg,.jpeg"
+              style={{ display: 'none' }}
+              onChange={handleFileSelect}
+            />
+            <Button
+              variant="outlined"
+              startIcon={<Upload />}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              Attach Files (Optional)
+            </Button>
+            <Typography variant="caption" color="text.secondary">
+              PDF, Word, Excel, Images
+            </Typography>
+          </Stack>
+
+          {selectedFiles.length > 0 && (
+            <Box>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                Selected Files ({selectedFiles.length}):
+              </Typography>
+              <Stack spacing={1}>
+                {selectedFiles.map((file, index) => (
+                  <Chip
+                    key={index}
+                    label={`${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`}
+                    onDelete={() => handleRemoveFile(index)}
+                    variant="outlined"
+                  />
+                ))}
+              </Stack>
+            </Box>
+          )}
+        </Box>
+      );
+    };
+
+    const { confirmed } = await confirm({
+      title: 'Re-Process Transfer Form',
+      description: transferFormId ? (
+        <Box sx={{ mb: 1 }}>
+          <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>
+            {`Transfer Form ID: ${transferFormId}`}
+          </Typography>
+          <Typography variant="body2">
+            You can provide a comment and attach additional files for re-processing.
+          </Typography>
+        </Box>
+      ) : 'You can provide a comment and attach additional files for re-processing.',
+      content: <ReProcessContent />,
+      allowClose: false,
+      dialogProps: { maxWidth: 'md', fullWidth: true },
+      confirmationText: 'Re-Process',
+      cancellationText: 'Cancel',
+      confirmationButtonProps: { color: 'warning', variant: 'contained', startIcon: <Warning /> },
+      cancellationButtonProps: { color: 'inherit' },
+    });
+
+    if (!confirmed) throw new Error('cancelled');
+
+    return {
+      comment: commentRef.current.trim(),
+      files: filesRef.current
+    };
+  };
+};
 
 // Types for confirmation options
 export interface ConfirmOptions {
@@ -32,6 +251,9 @@ export const CONFIRM_PRESETS = {
       color: 'success',
       variant: 'contained',
       startIcon: <CheckCircle />
+    },
+    cancellationButtonProps: {
+      color: 'inherit'
     }
   },
 
@@ -47,6 +269,9 @@ export const CONFIRM_PRESETS = {
       color: 'error',
       variant: 'contained',
       startIcon: <Cancel />
+    },
+    cancellationButtonProps: {
+      color: 'inherit'
     }
   },
 
@@ -112,18 +337,6 @@ export const CONFIRM_PRESETS = {
     description: 'Please provide a reason for rejection:',
     confirmationText: 'Confirm Reject',
     cancellationText: 'Cancel',
-    confirmationKeyword: '',
-    confirmationKeywordTextFieldProps: {
-      label: 'Reason for Rejection *',
-      placeholder: 'Enter rejection reason...',
-      multiline: true,
-      rows: 4,
-      required: true,
-      variant: 'outlined',
-      fullWidth: true,
-      autoFocus: true,
-      helperText: 'This field is required'
-    },
     dialogProps: {
       maxWidth: 'sm'
     },
@@ -149,6 +362,9 @@ export const CONFIRM_PRESETS = {
       color: 'info',
       variant: 'contained',
       startIcon: <Info />
+    },
+    cancellationButtonProps: {
+      color: 'inherit'
     }
   },
 
@@ -216,13 +432,11 @@ export const useConfirmation = () => {
     });
   };
 
-  const confirmReject = (transferFormId?: string) => {
-    return confirmWithPreset('reject', {
-      description: transferFormId 
-        ? `Transfer Form ID: ${transferFormId}\n\nPlease provide a reason for rejection:`
-        : 'Please provide a reason for rejection:'
-    });
-  };
+  // Use the separated confirmReject function
+  const confirmReject = createConfirmReject(confirm);
+
+  // Use the separated confirmReProcess function  
+  const confirmReProcess = createConfirmReProcess(confirm);
 
   const showSuccess = (message: string) => {
     return confirmWithPreset('success', {
@@ -260,6 +474,7 @@ export const useConfirmation = () => {
     confirmDelete,
     confirmProcess,
     confirmReject,
+    confirmReProcess,
     showSuccess,
     showError,
     showWarning,
